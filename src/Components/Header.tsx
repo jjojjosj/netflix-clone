@@ -131,7 +131,7 @@ function Header() {
         navAnimation.start("top");
       }
     });
-  }, [scrollY]);
+  }, [scrollY, navAnimation]);
   return (
     <Nav variants={navVariants} animate={navAnimation} initial="top">
       <Col>
