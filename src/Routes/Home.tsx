@@ -176,7 +176,7 @@ function Home() {
   const increateIndex = () => {
     if (data) {
       if (leaving) return;
-      setLeaving(true);
+      toggleLeaving();
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
