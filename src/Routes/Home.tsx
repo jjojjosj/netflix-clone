@@ -29,12 +29,13 @@ const Banner = styled.div<{ bgphoto: string }>`
 `;
 
 const Title = styled.h2`
-  font-size: 68px;
+  font-size: 64px;
+  font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const Overview = styled.p`
-  font-size: 30px;
+  font-size: 24px;
   width: 50%;
 `;
 
