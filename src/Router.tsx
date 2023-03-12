@@ -8,7 +8,7 @@ function Router() {
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Header />
       <Switch>
-        <Route path="/tv">
+        <Route path={["/tv", "/tv/:tvId"]}>
           <Tv />
         </Route>
         <Route path="/search">
