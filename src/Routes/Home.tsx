@@ -22,7 +22,7 @@ const Banner = styled.div<{ bgphoto: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px;
+  padding: 240px 60px 60px;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgphoto});
   background-size: cover;
@@ -44,12 +44,25 @@ const Slider = styled.div`
   top: -100px;
 `;
 
+const SliderHeader = styled.h2`
+  line-height: 1.3;
+  margin: 0;
+`;
+
+const SliderTitle = styled.span`
+  display: inline-block;
+  font-size: 1.4vw;
+  font-weight: 500;
+  margin: 0 4% 0.5em;
+`;
+
 const Row = styled(motion.div)`
   display: grid;
   gap: 5px;
   grid-template-columns: repeat(6, 1fr);
   position: absolute;
   width: 100%;
+  padding: 0 60px;
 `;
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
@@ -57,9 +70,10 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
-  height: 200px;
+  height: 130px;
   font-size: 66px;
   cursor: pointer;
+  border-radius: 5px;
   &:first-child {
     transform-origin: center left;
   }
@@ -75,6 +89,7 @@ const Info = styled(motion.div)`
   position: absolute;
   width: 100%;
   bottom: 0;
+  border-radius: 5px;
   h4 {
     text-align: center;
     font-size: 18px;
@@ -92,7 +107,7 @@ const Overlay = styled(motion.div)`
 
 const BigMovie = styled(motion.div)`
   position: absolute;
-  width: 40vw;
+  width: 60vw;
   height: 80vh;
   left: 0;
   right: 0;
@@ -100,31 +115,64 @@ const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
+  overflow-y: scroll;
 `;
 
 const BigCover = styled.div`
+  position: relative;
   width: 100%;
   background-size: cover;
   background-position: center center;
-  height: 400px;
+  height: 510px;
+  z-index: 1;
+`;
+
+const BigPoster = styled.div`
+  top: -120px;
+  z-index: 2;
+  position: relative;
+  display: flex;
+  width: 300px;
+  background-size: cover;
+  background-position: center center;
+  height: 450px;
 `;
 
 const BigTitle = styled.h3`
+  display: flex;
   color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
+  padding: 0 20px 0 33%;
   font-size: 36px;
   position: relative;
-  top: -80px;
+  top: -300px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  z-index: 2;
 `;
 
 const BigOverview = styled.p`
-  padding: 20px;
+  padding: 0 20px 0 33%;
   position: relative;
   color: ${(props) => props.theme.white.lighter};
-  top: -80px;
+  top: -300px;
+  display: flex;
+`;
+
+const ArrowHandler = styled.span`
+  bottom: 0;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 4%;
+  background-color: tomato;
+`;
+
+const RowWrapper = styled.div`
+  display: inline-block;
 `;
 
 const rowVariants = {
@@ -177,7 +225,7 @@ function Home() {
   );
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
-  const increateIndex = () => {
+  const increaseIndex = () => {
     if (data) {
       if (leaving) return;
       toggleLeaving();
@@ -204,7 +252,7 @@ function Home() {
       ) : (
         <>
           <Banner
-            onClick={increateIndex}
+            onClick={increaseIndex}
             bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}
           >
             <Title>{data?.results[0].title}</Title>
@@ -212,6 +260,9 @@ function Home() {
           </Banner>
           <Slider>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <SliderHeader>
+                <SliderTitle>Now Playing</SliderTitle>
+              </SliderHeader>
               <Row
                 variants={rowVariants}
                 initial="hidden"
@@ -266,6 +317,14 @@ function Home() {
                           )})`,
                         }}
                       />
+                      <BigPoster
+                        style={{
+                          backgroundImage: `url(${makeImagePath(
+                            clickedMovie.poster_path,
+                            "w300"
+                          )})`,
+                        }}
+                      ></BigPoster>
                       <BigTitle>{clickedMovie.title}</BigTitle>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
