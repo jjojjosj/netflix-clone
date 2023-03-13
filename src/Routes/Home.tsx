@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api";
+import { getMovies, IGetContentResult } from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -219,7 +219,7 @@ function Home() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useScroll();
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
+  const { data, isLoading } = useQuery<IGetContentResult>(
     ["movies", "nowPlaying"],
     getMovies
   );

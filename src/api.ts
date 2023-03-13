@@ -5,45 +5,23 @@ const LANG = "ko-KR";
 //const LANG = "en-US";
 const REGION = "kr";
 
-interface IMovie {
-  id: number;
-  backdrop_path: string;
-  poster_path: string;
-  title: string;
-  name?: string;
-  overview: string;
-}
-
-interface ITv {
+interface IContent {
   id: number;
   backdrop_path: string;
   poster_path: string;
   title?: string;
-  name: string;
+  name?: string;
   overview: string;
+  media_type: string;
 }
 
-export interface IGetMoviesResult {
-  dates: {
+export interface IGetContentResult {
+  dates?: {
     maximum: string;
     minimum: string;
   };
   page: number;
-  results: IMovie[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface IGetTvResult {
-  page: number;
-  results: ITv[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface IGetMultiSearchResult {
-  page: number;
-  results: ITv[] | IMovie[];
+  results: IContent[];
   total_pages: number;
   total_results: number;
 }

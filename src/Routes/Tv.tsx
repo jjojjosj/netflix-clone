@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getTvs, IGetTvResult } from "../api";
+import { getTvs, IGetContentResult } from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -203,7 +203,7 @@ function Tv() {
   const history = useHistory();
   const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { scrollY } = useScroll();
-  const { data, isLoading } = useQuery<IGetTvResult>(
+  const { data, isLoading } = useQuery<IGetContentResult>(
     ["tv", "topRated"],
     getTvs
   );

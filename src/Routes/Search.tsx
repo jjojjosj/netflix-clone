@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getSearch, IGetMultiSearchResult } from "../api";
+import { getSearch, IGetContentResult } from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -170,11 +170,15 @@ function Search() {
   const history = useHistory();
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword") || "";
-  const { data, isLoading } = useQuery<IGetMultiSearchResult>(
-    ["search", "multi"],
+  console.log(keyword);
+  const { data, isLoading } = useQuery<IGetContentResult>(
+    ["search", "multi", keyword],
     () => getSearch(keyword)
   );
-  const totalMovies = data?.results.length || 0;
+  const filteredResults = data?.results.filter(
+    (content) => content.backdrop_path && content.backdrop_path !== ""
+  );
+  const totalMovies = filteredResults?.length || 0;
   const numOfRows = Math.ceil(totalMovies / offset);
   const onOverlayClick = () => {
     history.goBack();
@@ -195,8 +199,8 @@ function Search() {
               transition={{ type: "tween", duration: 1 }}
               key={index}
             >
-              {data?.results
-                .slice(offset * index, offset * index + offset)
+              {filteredResults
+                ?.slice(offset * index, offset * index + offset)
                 .map((content) => (
                   <Box
                     layoutId={content.id + ""}
