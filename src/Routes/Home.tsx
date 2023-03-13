@@ -139,16 +139,14 @@ const BigPoster = styled.div`
 `;
 
 const BigTitle = styled.h3`
-  display: flex;
+  position: absolute;
+  left: 320px;
+  padding-bottom: 20px;
+  bottom: 0;
+  text-align: right;
   color: ${(props) => props.theme.white.lighter};
-  padding: 0 20px 0 33%;
   font-size: 36px;
-  position: relative;
-  top: -300px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  z-index: 2;
+  font-weight: 500;
 `;
 
 const BigOverview = styled.p`
@@ -316,7 +314,9 @@ function Home() {
                             "w500"
                           )})`,
                         }}
-                      />
+                      >
+                        <BigTitle>{clickedMovie.title}</BigTitle>
+                      </BigCover>
                       <BigPoster
                         style={{
                           backgroundImage: `url(${makeImagePath(
@@ -325,7 +325,7 @@ function Home() {
                           )})`,
                         }}
                       ></BigPoster>
-                      <BigTitle>{clickedMovie.title}</BigTitle>
+
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
                   )}
