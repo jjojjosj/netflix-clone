@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
@@ -169,7 +169,11 @@ const offset = 5;
 function Search() {
   const history = useHistory();
   const location = useLocation();
+  const { scrollY } = useScroll();
   const keyword = new URLSearchParams(location.search).get("keyword") || "";
+  const bigContentMatch = useRouteMatch<{ contentId: string }>(
+    "/search/:media_type/:contentId"
+  );
   const { data, isLoading } = useQuery<IGetContentResult>(
     ["search", "multi", keyword],
     () => getSearch(keyword)
@@ -182,6 +186,21 @@ function Search() {
   const onOverlayClick = () => {
     history.goBack();
   };
+  const onBoxClicked = (contentId: number, media_type: string) => {
+    history.push(`/search/${media_type}/${contentId}?keyword=${keyword}`);
+  };
+
+  const clickedContent =
+    bigContentMatch?.params.contentId &&
+    data?.results.find(
+      (content) => content.id === +bigContentMatch.params.contentId
+    );
+  console.log(
+    bigContentMatch,
+    bigContentMatch?.params.contentId,
+    data?.results
+  );
+
   return (
     <Wrapper>
       <Blank />
@@ -208,6 +227,7 @@ function Search() {
                     initial="normal"
                     variants={boxVariants}
                     transition={{ type: "tween" }}
+                    onClick={() => onBoxClicked(content.id, content.media_type)}
                     bgphoto={makeImagePath(content.backdrop_path, "w500")}
                   >
                     <Info variants={infoVariants}>
@@ -217,6 +237,48 @@ function Search() {
                 ))}
             </Row>
           ))}
+          <AnimatePresence>
+            {bigContentMatch ? (
+              <>
+                <Overlay
+                  onClick={onOverlayClick}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                />
+                <BigMovie
+                  style={{
+                    top: scrollY.get() + 100,
+                  }}
+                  layoutId={bigContentMatch.params.contentId}
+                >
+                  {clickedContent && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedContent.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigPoster
+                        style={{
+                          backgroundImage: `url(${makeImagePath(
+                            clickedContent.poster_path,
+                            "w300"
+                          )})`,
+                        }}
+                      ></BigPoster>
+                      <BigTitle>
+                        {clickedContent.title || clickedContent.name}
+                      </BigTitle>
+                      <BigOverview>{clickedContent.overview}</BigOverview>
+                    </>
+                  )}
+                </BigMovie>
+              </>
+            ) : null}
+          </AnimatePresence>
         </>
       )}
     </Wrapper>
